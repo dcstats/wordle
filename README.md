@@ -3,7 +3,11 @@ A Python bot that (naively) plays the game Wordle.
 
 
 ## Usage
-Clone repo and navigate to folder. To import:
+Clone repo and navigate to folder. Make sure to install all requirements first:
+```python
+pip install -r requirements.txt
+```
+To import:
 ```python
 from wordle import Wordle
 ```
