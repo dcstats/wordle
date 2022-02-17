@@ -16,12 +16,23 @@ class InvalidWordError(Exception):
     pass
 
 
+class VersionError(Exception):
+    pass
+
+
 class Wordle:
     """
     This class represents a bot that plays the game Wordle in a
     fairly naive manner. Words on each round of guessing are chosen probabilistically
     based on 1) the results of previous guesses and 2) the frequency of the word in the
     English language.
+
+    Parameters - answer (string) - default 'random', in which case the bot is given a
+        random word as the answer. User can also define their own 5-letter word as the
+        answer, so long as the word is in the list of possible words.
+
+                version (string) - default 'new', in which case the NYT word list is used;
+                if version is 'old', the word list from the original Wordle site is used.
     """
 
     def __init__(self, answer="random", version="new"):
@@ -32,6 +43,10 @@ class Wordle:
         elif version == "old":
             fn = "wordle_old.txt"
             fna = "wordle_answers_old.txt"
+        else:
+            raise VersionError(
+                f'{version} is not a valid verson. Please use only "new" or "old".'
+            )
 
         # set answer
         if answer == "random":
