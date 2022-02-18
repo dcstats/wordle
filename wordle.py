@@ -55,7 +55,7 @@ class Wordle:
 
             ans = string.split(", ")
             ans = sorted(ans)
-            self.answer == np.random.choice(ans)
+            self.answer = np.random.choice(ans)
         else:
             self.answer = str.lower(answer)
 
