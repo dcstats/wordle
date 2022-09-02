@@ -6,6 +6,7 @@ Author: Daniel Cowan
 
 import numpy as np
 from wordfreq import zipf_frequency as zf
+from tqdm import tqdm
 
 
 class WordLengthError(Exception):
@@ -17,6 +18,10 @@ class InvalidWordError(Exception):
 
 
 class VersionError(Exception):
+    pass
+
+
+class SimulationError(Exception):
     pass
 
 
@@ -96,7 +101,7 @@ class Wordle:
         self.yellow_square = "\U0001F7E8"
         self.gray_square = "\U00002B1C"
 
-    def play(self):
+    def play(self, sim=False):
         """
         This function plays one round of Wordle and prints the output.
 
@@ -118,7 +123,9 @@ class Wordle:
                 self.solved = True
                 break
 
-        self.print_state()
+        if not sim:
+            self.print_state()
+
         self.played = True
 
         return self.solved
@@ -239,6 +246,43 @@ class Wordle:
                 word: self.filtered[word] for word in self.filtered if k not in word
             }
 
+        return
+
+    def simulate(self, n=100):
+        all_moves = []
+        bar = '█'
+
+        if n >= 50000:
+            raise SimulationError('Please run <= 50000 simulations')
+
+        for i in tqdm(range(n)):
+            self.play(sim=True)
+            moves = self.return_total_moves()
+            all_moves.append(moves)
+
+        scale = 100 / len(all_moves)
+        median, mean, std = np.median(all_moves), np.mean(
+            all_moves), np.std(all_moves)
+
+        print()
+        print(f'Result of {n} simulations with answer "{self.answer}":')
+        print(f'------------------------------------------------------')
+
+        print()
+        print(f'1 | {bar*int(all_moves.count(1)*scale)} {all_moves.count(1)}')
+        print(f'2 | {bar*int(all_moves.count(2)*scale)} {all_moves.count(2)}')
+        print(f'3 | {bar*int(all_moves.count(3)*scale)} {all_moves.count(3)}')
+        print(f'4 | {bar*int(all_moves.count(4)*scale)} {all_moves.count(4)}')
+        print(f'5 | {bar*int(all_moves.count(5)*scale)} {all_moves.count(5)}')
+        print(f'6 | {bar*int(all_moves.count(6)*scale)} {all_moves.count(6)}')
+        print(f'X | {bar*int(all_moves.count(7)*scale)} {all_moves.count(7)}')
+        print()
+
+        print(f'Median guesses: {median}')
+        print(f'Expected guesses: {mean}')
+        print(f'Std. dev. of guesses: {std}')
+        print(
+            f'% of guesses correct: {(1 - (all_moves.count(7) / len(all_moves)))*100:.2f}%')
         return
 
     def print_state(self):
