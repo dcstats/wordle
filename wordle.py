@@ -81,10 +81,12 @@ class Wordle:
         for word in words:
             score = zf(word, "en")
             freq[word] = score
-        self.freq = dict(sorted(freq.items(), key=lambda x: x[1], reverse=True))
+        self.freq = dict(
+            sorted(freq.items(), key=lambda x: x[1], reverse=True))
 
+        self.played = False
         self.solved = False
-        self.filtered = freq
+        self.filtered = self.freq
         self.not_in = []
         self.contains = {}
         self.equals = {}
@@ -102,6 +104,9 @@ class Wordle:
 
         Returns - self.solved (boolean): whether the puzzle has been solved
         """
+        if self.played:
+            self.reset_game()
+
         for i in range(6):
             guess = self.make_guess()
 
@@ -114,8 +119,20 @@ class Wordle:
                 break
 
         self.print_state()
+        self.played = True
 
         return self.solved
+
+    def reset_game(self):
+        self.played = False
+        self.solved = False
+        self.filtered = self.freq
+        self.not_in = []
+        self.contains = {}
+        self.equals = {}
+        self.guesses = []
+        self.board = []
+        return
 
     def return_total_moves(self):
         """
