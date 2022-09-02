@@ -36,6 +36,16 @@ To have the bot play a game:
 w.play()
 ```
 The bot will play a game, making guesses until it fails or correctly guesses the word. The state of the final board will be printed to the console.
+The bot plays differently each time you call play().
+
+You can also simulate 100 plays for a given word:
+```python
+w.simulate()
+```
+OR simulate as many plays as you like:
+```python
+w.simulate(1000)
+```
 
 ## Misc
 Feel free to clone and make your own changes/analyses! Interestingly, a bot as naive as this one still wins about 95% of the time. Maybe you can add features to make it even better!
